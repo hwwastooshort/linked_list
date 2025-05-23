@@ -1,0 +1,31 @@
+# Binaries
+/bin/
+/obj/
+/out/
+/build/
+
+# Go build outputs
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Dependency directories
+/vendor/
+
+# IDE und Editor-spezifische Dateien
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Betriebssystem-Dateien
+.DS_Store
+Thumbs.db
+
+# Test-Ausgaben
+*.test
+
+# Go Modul Cache (optional, meist nicht versioniert)
+Gopkg.lock
