@@ -5,27 +5,27 @@ import (
 	"fmt"
 )
 
-type Node[T any] struct {
+type SingleNode[T any] struct {
 	value T
-	next  *Node[T]
+	next  *SingleNode[T]
 }
 
-type LinkedList[T any] struct {
-	head *Node[T]
+type SingleLinkedList[T any] struct {
+	head *SingleNode[T]
 	size int
 }
 
-func (list *LinkedList[T]) Size() int {
+func (list *SingleLinkedList[T]) Size() int {
 	return list.size
 }
 
-func NewLinkedList[T any]() *LinkedList[T] {
-	return &LinkedList[T]{}
+func NewSingleLinkedList[T any]() *SingleLinkedList[T] {
+	return &SingleLinkedList[T]{}
 }
 
-func (list *LinkedList[T]) InsertLast(newValue T) T {
+func (list *SingleLinkedList[T]) InsertLast(newValue T) T {
 
-	newNode := &Node[T]{value: newValue}
+	newNode := &SingleNode[T]{value: newValue}
 
 	if list.head == nil {
 		list.head = newNode
@@ -42,13 +42,13 @@ func (list *LinkedList[T]) InsertLast(newValue T) T {
 
 }
 
-func (list *LinkedList[T]) InsertFirst(newVaule T) T {
+func (list *SingleLinkedList[T]) InsertFirst(newVaule T) T {
 
 	if list.size == 0 {
 		return list.InsertLast(newVaule)
 	}
 
-	newNode := &Node[T]{value: newVaule}
+	newNode := &SingleNode[T]{value: newVaule}
 	newNode.next = list.head
 	list.head = newNode
 	list.size++
@@ -56,7 +56,7 @@ func (list *LinkedList[T]) InsertFirst(newVaule T) T {
 	return newVaule
 }
 
-func (list *LinkedList[T]) String() string {
+func (list *SingleLinkedList[T]) String() string {
 
 	if list.head == nil {
 		return "nil"
@@ -78,30 +78,33 @@ func (list *LinkedList[T]) String() string {
 
 }
 
-func (list *LinkedList[T]) RemoveLast() {
+func (list *SingleLinkedList[T]) RemoveLast() (T, error) {
+	var errorItem T
 
 	if list.head == nil {
-		return
+		return errorItem, errors.New("list is empty")
 	}
 
 	if list.head.next == nil {
+		value := list.head.value
 		list.head = nil
 		list.size--
-		return
+		return value, nil
 	}
 
 	current := list.head
-
 	for current.next.next != nil {
 		current = current.next
 	}
 
+	value := current.next.value
 	current.next = nil
 	list.size--
 
+	return value, nil
 }
 
-func (list *LinkedList[T]) Get(index int) (T, error) {
+func (list *SingleLinkedList[T]) Get(index int) (T, error) {
 
 	var errorItem T
 
@@ -125,7 +128,7 @@ func (list *LinkedList[T]) Get(index int) (T, error) {
 
 }
 
-func (list *LinkedList[T]) RemoveAt(index int) (T, error) {
+func (list *SingleLinkedList[T]) RemoveAt(index int) (T, error) {
 
 	var errorItem T
 
@@ -153,7 +156,7 @@ func (list *LinkedList[T]) RemoveAt(index int) (T, error) {
 
 }
 
-func (list *LinkedList[T]) InsertAt(index int, newValue T) (T, error) {
+func (list *SingleLinkedList[T]) InsertAt(index int, newValue T) (T, error) {
 	var errorItem T
 
 	if index < 0 || index > list.size {
@@ -168,7 +171,7 @@ func (list *LinkedList[T]) InsertAt(index int, newValue T) (T, error) {
 		return list.InsertLast(newValue), nil
 	}
 
-	newNode := &Node[T]{value: newValue}
+	newNode := &SingleNode[T]{value: newValue}
 	current := list.head
 
 	for i := 0; i < index-1; i++ {
