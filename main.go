@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	list := linkedlist.NewSingleLinkedList[int]()
+
+	list := linkedlist.NewDoubleLinkedList[int]()
 
 	for i := range 10 {
 		list.InsertLast(i)
