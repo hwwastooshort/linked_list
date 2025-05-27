@@ -91,7 +91,8 @@ func (list *DoubleLinkedList[T]) InsertLast(newValue T) T {
 
 }
 
-func (list *DoubleLinkedList[T]) removeFirst() (T, error) {
+func (list *DoubleLinkedList[T]) RemoveFirst() (T, error) {
+
 	var errorItem T
 
 	if list.head == nil {
@@ -110,4 +111,101 @@ func (list *DoubleLinkedList[T]) removeFirst() (T, error) {
 	list.size--
 
 	return returnedValue, nil
+
+}
+
+func (list *DoubleLinkedList[T]) RemoveLast() (T, error) {
+
+	var errorItem T
+
+	if list.tail == nil {
+		return errorItem, errors.New("cannot remove last element of an empty list")
+	}
+
+	returnedValue := list.tail.value
+	list.tail = list.tail.previous
+
+	if list.tail != nil {
+		list.tail.next = nil
+	} else {
+		list.head = nil
+	}
+
+	list.size--
+
+	return returnedValue, nil
+
+}
+
+func (list *DoubleLinkedList[T]) Get(index int) (T, error) {
+	var zeroValue T
+
+	if index < 0 || index >= list.size {
+		return zeroValue, errors.New("index out of bounds")
+	}
+
+	current := list.head
+	for i := 0; i < index; i++ {
+		current = current.next
+	}
+
+	return current.value, nil
+}
+
+func (list *DoubleLinkedList[T]) InsertAt(index int, value T) (T, error) {
+	if index < 0 || index > list.size {
+		var zeroValue T
+		return zeroValue, errors.New("index out of bounds")
+	}
+
+	if index == 0 {
+		return list.InsertFirst(value), nil
+	}
+	if index == list.size {
+		return list.InsertLast(value), nil
+	}
+
+	current := list.head
+	for i := 0; i < index; i++ {
+		current = current.next
+	}
+
+	newNode := &DoubleNode[T]{value: value}
+
+	prev := current.previous
+	newNode.previous = prev
+	newNode.next = current
+	prev.next = newNode
+	current.previous = newNode
+
+	list.size++
+	return value, nil
+}
+
+func (list *DoubleLinkedList[T]) RemoveAt(index int) (T, error) {
+	var zeroValue T
+
+	if index < 0 || index >= list.size {
+		return zeroValue, errors.New("index out of bounds")
+	}
+
+	if index == 0 {
+		return list.RemoveFirst()
+	}
+	if index == list.size-1 {
+		return list.RemoveLast()
+	}
+
+	current := list.head
+	for i := 0; i < index; i++ {
+		current = current.next
+	}
+
+	prev := current.previous
+	next := current.next
+	prev.next = next
+	next.previous = prev
+
+	list.size--
+	return current.value, nil
 }
